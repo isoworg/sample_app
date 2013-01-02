@@ -12,10 +12,18 @@ class UsersController < ApplicationController
   end
 
   def new
+    if signed_in?
+      flash[:error] = "You're already signed in"
+      redirect_to user_path(current_user) 
+    end
   	@user = User.new
   end
 
   def create
+    if signed_in?
+      flash[:error] = "You're already signed in"
+      redirect_to user_path(current_user) 
+    end
     @user = User.new(params[:user])
   	if @user.save
       sign_in @user

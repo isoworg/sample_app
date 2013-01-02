@@ -4,7 +4,7 @@ describe "User pages" do
 
   subject { page }
 
- describe "index" do
+  describe "index" do
 
     let(:user) { FactoryGirl.create(:user) }
 
@@ -36,6 +36,18 @@ describe "User pages" do
 
     it { should have_selector('h1',    text: 'Sign up') }
     it { should have_selector('title', text: 'Sign up') }
+
+    describe "signed in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+        sign_in user
+        visit signup_path
+      end
+
+      it { should have_selector('h1',    text: user.name) }
+      it { should have_selector('title', text: user.name) }
+      it { should have_content('already') }
+    end
   end
 
   describe "profile page" do
@@ -123,9 +135,7 @@ describe "User pages" do
       it { should have_link('Sign out', href: signout_path) }
       specify { user.reload.name.should  == new_name }
       specify { user.reload.email.should == new_email }
-    end
-    
-  end
-
+    end 
+  end 
 end
 
